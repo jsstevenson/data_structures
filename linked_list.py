@@ -32,8 +32,19 @@ class Linked_List:
             return current.data
 
     def getIndex(self, value):
-        # todo
-        return
+        if value is None:
+            raise TypeError('value cannot be None')
+        elif self.front is not None:
+            index = 0
+            if self.front.data == value:
+                return index
+            current = self.front
+            while current.nextNode is not None:
+                index += 1
+                current = current.nextNode
+                if current.data == value:
+                    return index
+        return -1
 
     def removeIndex(self, index):
         if index < 0:
@@ -54,26 +65,6 @@ class Linked_List:
                 raise IndexError('index out of range')
             else:
                 current.nextNode = current.nextNode.nextNode
-
-    def removeValue(self, value):
-        '''
-        remove first instance of the provided value
-        '''
-        if value is None:
-            raise TypeError('cannot provide None as value')
-
-
-        ''' todo
-        if self.front:
-            if self.front.data == value:
-                self.front = self.front.nextNode
-            else:
-                current = self.front
-                while current.nextNode:
-                    if current.nextNode.data == value:
-                        current.nextNode = current.nextNode.nextNode
-        '''
-        return
 
     def clear(self):
         self.front = None
