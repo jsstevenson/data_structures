@@ -31,7 +31,7 @@ class Linked_List:
                     index -= 1
             return current.data
 
-    def getIndex(self, value):
+    def get_index(self, value):
         if value is None:
             raise TypeError('value cannot be None')
         elif self.front is not None:
@@ -46,7 +46,7 @@ class Linked_List:
                     return index
         return -1
 
-    def removeIndex(self, index):
+    def remove_index(self, index):
         if index < 0:
             raise IndexError('index out of range')
         elif self.front is None:
