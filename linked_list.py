@@ -1,8 +1,8 @@
 class Linked_List:
-    
-    def __init__(self, front = None):
+
+    def __init__(self, front=None):
         self.front = front
-    
+
     def add(self, value):
         if value is None:
             raise TypeError('cannot add value None')
@@ -13,7 +13,7 @@ class Linked_List:
             while current.nextNode:
                 current = current.nextNode
             current.nextNode = Linked_List_Node(value)
-    
+
     def get(self, index):
         if index < 0:
             raise IndexError('index out of range')
@@ -55,11 +55,11 @@ class Linked_List:
             self.front = self.front.nextNode
         else:
             current = self.front
-            while index > 1: # loop until one before index to remove
+            while index > 1:  # loop until one before index to remove
                 try:
                     current = current.nextNode
                     index -= 1
-                except AttributeError: # this check may be redundant
+                except AttributeError:  # this check may be redundant
                     raise IndexError('index out of range')
             if current.nextNode is None:
                 raise IndexError('index out of range')
@@ -80,9 +80,9 @@ class Linked_List:
         string += ']'
         return string
 
+
 class Linked_List_Node:
 
-    def __init__(self, data = None, nextNode = None):
+    def __init__(self, data=None, nextNode=None):
         self.data = data
         self.nextNode = nextNode
-    
