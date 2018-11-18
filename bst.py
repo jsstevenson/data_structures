@@ -7,14 +7,14 @@ class BinarySearchTree(BinaryTree):
         super().__init__(overall_root)
 
     def add_find(self, root, item):
-        if root.left_child is None and item < root.data:
-            root.left_child = BinaryTreeNode(item)
-        elif root.right_child is None and item > root.data:
-            root.right_child = BinaryTreeNode(item)
+        if root.left is None and item < root.data:
+            root.left = BinaryTreeNode(item)
+        elif root.right is None and item > root.data:
+            root.right = BinaryTreeNode(item)
         elif item < root.data:
-            self.add_find(root.left_child, item)
+            self.add_find(root.left, item)
         else:
-            self.add_find(root.right_child, item)
+            self.add_find(root.right, item)
 
     def add(self, item):
         if item is None:
@@ -33,8 +33,8 @@ class BinarySearchTree(BinaryTree):
             return 0
         else:
             result = []
-            result.append(self.height(root.left_child))
-            result.append(self.height(root.right_child))
+            result.append(self.height(root.left))
+            result.append(self.height(root.right))
             return 1 + max(result)
 
     def get_height(self):
@@ -48,9 +48,9 @@ class BinarySearchTree(BinaryTree):
             return ''
         else:
             result = ''
-            result += self.inorder(root.left_child)
+            result += self.inorder(root.left)
             result += str(root.data) + ', '
-            result += self.inorder(root.right_child)
+            result += self.inorder(root.right)
             return result
 
     def print_inorder(self):
@@ -71,8 +71,8 @@ class BinarySearchTree(BinaryTree):
         elif root.data == data:
             return True
         else:
-            left = self.contains_find(root.left_child, data)
-            right = self.contains_find(root.right_child, data)
+            left = self.contains_find(root.left, data)
+            right = self.contains_find(root.right, data)
             return left or right
 
     def contains(self, data):
@@ -87,9 +87,9 @@ class BinarySearchTree(BinaryTree):
         elif data == root.data:
             return root
         elif data < root.data:
-            return self.get_find(root.left_child, data)
+            return self.get_find(root.left, data)
         else:
-            return self.get_find(root.right_child, data)
+            return self.get_find(root.right, data)
 
     def get(self, data):
         if self.overall_root is None:
