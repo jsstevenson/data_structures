@@ -1,29 +1,84 @@
-from bst import BinarySearchTree
-from binary_tree import BinaryTreeNode
+from binary_tree import BinaryTree, BinaryTreeNode
 
 
-class BSTDict(BinarySearchTree):
+class BSTDict(BinaryTree):
 
     def __init__(self, overall_root=None):
         super().__init__(overall_root)
 
-    def add_find(self, root, key, value):
-        if root.left is None and key < root.data:
+    def put_traverse(self, root, key, value):
+        if root.data == key:
+            root.data.value = value
+        elif root.left is None and key < root.data:
             root.left = BSTDictNode(key, value)
         elif root.right is None and key > root.data:
             root.right = BSTDictNode(key, value)
         elif key < root.data:
-            self.add_find(root.left, key, value)
+            self.put_traverse(root.left, key, value)
         else:
-            self.add_find(root.right, key, value)
+            self.put_traverse(root.right, key, value)
 
-    def add(self, key, value):
+    def put(self, key, value):
         if key is None:
             raise TypeError('Cannot accept key of type None')
         if self.overall_root is None:
             self.overall_root = BSTDictNode(key, value)
         else:
-            self.add_find(self.overall_root, key, value)
+            self.put_traverse(self.overall_root, key, value)
+
+    def contains_key_traverse(self, root, key):
+        if root is None:
+            return False
+        elif root.data.key == key:
+            return True
+        else:
+            left = self.contains_key_traverse(root.left, key)
+            right = self.contains_key_traverse(root.right, key)
+            return left or right
+
+    def contains_key(self, key):
+        if self.overall_root is None:
+            return False
+        else:
+            return self.contains_key_traverse(self.overall_root, key)
+
+    def get_traverse(self, root, key):
+        if root is None:
+            raise KeyError('Not contained in tree')
+        elif key == root.data.key:
+            return root.data.value
+        elif key < root.data.key:
+            return self.get_traverse(root.left, key)
+        else:
+            return self.get_traverse(root.right, key)
+
+    def get(self, key):
+        if self.overall_root is None:
+            raise KeyError('Key not contained in tree')
+        else:
+            return self.get_traverse(self.overall_root, key)
+
+    def print_inorder_traverse(self, root):
+        if root is None:
+            return ''
+        else:
+            result = ''
+            result += self.print_inorder_traverse(root.left)
+            result += str(root.data) + ', '
+            result += self.print_inorder_traverse(root.right)
+            return result
+
+    def print_inorder(self):
+        if self.overall_root is None:
+            return('{}')
+        else:
+            result = '{'
+            result += self.print_inorder_traverse(self.overall_root)
+            result = result[:-2] + '}'
+            return result
+
+    def __repr__(self):
+        return self.print_inorder()
 
 
 class BSTDictNode(BinaryTreeNode):
@@ -38,145 +93,35 @@ class KVPair(object):
         self.key = key
         self.value = value
 
+    def __repr__(self):
+        return f'{self.key}: {self.value}'
+
     def __eq__(self, other_pair):
         try:
-            return self.key == other_pair.key
+            return self.key == other_pair
         except TypeError:
             raise TypeError('Cannot compare value with other key')
 
     def __lt__(self, other_pair):
         try:
-            return self.key < other_pair.key
+            return self.key < other_pair
         except TypeError:
             raise TypeError('Cannot compare value with other key')
 
     def __le__(self, other_pair):
         try:
-            return self.key <= other_pair.key
+            return self.key <= other_pair
         except TypeError:
             raise TypeError('Cannot compare value with other key')
 
     def __gt__(self, other_pair):
         try:
-            return self.key > other_pair.key
+            return self.key > other_pair
         except TypeError:
             raise TypeError('Cannot compare value with other key')
 
     def __ge__(self, other_pair):
         try:
-            return self.key >= other_pair.key
+            return self.key >= other_pair
         except TypeError:
             raise TypeError('Cannot compare value with other key')
-
-
-
-# class BSTDict(BinarySearchTree):
-#     def __init__(self, overall_root=None):
-#         super(BSTDict, self).__init__(overall_root)
-
-#     def add_find(self, root, item):
-#         if root.left_child is None and item < root:
-#             root.left_child = item
-#         elif root.right_child is None and item > root:
-#             root.right_child = item
-#         elif item < root:
-#             self.add_find(root.left_child, item)
-#         else:
-#             self.add_find(root.right_child, item)
-
-#     def add(self, key, value):
-#         if key is None:
-#             raise TypeError('cannot accept type None for key')
-#         if self.overall_root is None:
-#             self.overall_root = BSTDictNode(key, value)
-#         else:
-#             item = BSTDictNode(key, value)
-#             try:
-#                 item > self.overall_root
-#             except TypeError:
-#                 raise TypeError('cannot accept item of this type')
-#             self.add_find(self.overall_root, item)
-
-#     def height(self, root):
-#         if root is None:
-#             return 0
-#         else:
-#             result = []
-#             result.append(self.height(root.left_child))
-#             result.append(self.height(root.right_child))
-#             return 1 + max(result)
-
-#     def get_height(self):
-#         if self.overall_root is None:
-#             return 0
-#         else:
-#             return self.height(self.overall_root)
-
-#     def inorder(self, root):
-#         if root is None:
-#             return ''
-#         else:
-#             result = ''
-#             result += self.inorder(root.left_child)
-#             result += str(self.key) + ': ' + str(self.value) + ', '
-#             result += self.inorder(root.right_child)
-#             return result
-
-#     def print_inorder(self):
-#         if self.overall_root is None:
-#             print('{}')
-#         else:
-#             result = '{'
-#             result += self.inorder(self.overall_root)
-#             result = result[:-2] + '}'
-#             return result
-
-#     def __repr__(self):
-#         return self.print_inorder()
-
-#     def contains_key_find(self, root, key):
-#         if root is None:
-#             return False
-#         try:
-#             if root.key == key:
-#                 return True
-#             elif root.key < key:
-#                 return self.contains_key_find(root.left, key)
-#             else:
-#                 return self.contains_key_find(root.right, key)
-#         except TypeError:
-#             raise TypeError('Cannot compare provided key to tree')
-
-#     def contains_key(self, key):
-#         if self.overall_root is None:
-#             return False
-#         else:
-#             return self.contains_key_find(self.overall_root, key)
-
-#     def get_find(self, root, key):
-#         if root is None:
-#             raise KeyError('Not contained in tree')
-#         try:
-#             if root.key == key:
-#                 return root.value
-#             elif root.key < key:
-#                 return self.get_find(root.left, key)
-#             else:
-#                 return self.get_find(root.right, key)
-#         except TypeError:
-#             raise TypeError('Cannot compare key to tree')
-
-#     def get(self, key):
-#         if self.overall_root is None:
-#             raise KeyError('Tree is empty')
-#         else:
-#             return self.get_find(self.overall_root, key)
-
-
-# class BSTDictNode(BinaryTreeNode):
-#     def __init__(self, key, value, left, right):
-#         if key is None:
-#             raise TypeError('Cannot initialize key as None')
-#         else:
-#             self.key = key
-#             self.value = value
