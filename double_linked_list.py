@@ -60,6 +60,16 @@ class DoubleLinkedList(linked_list.LinkedList):
         self.back = None
         self.size = 0
 
+    def contains(self, data):
+        if not self.front:
+            return False
+        else:
+            current = self.front
+            while current:
+                if current.data is data:
+                    return True
+            return False
+
 
 class DoubleLinkedListNode(linked_list.LinkedListNode):
 
