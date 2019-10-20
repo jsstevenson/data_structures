@@ -1,3 +1,13 @@
+from ds_exceptions import EmptyContainerError
+
+
+class LinkedListNode:
+
+    def __init__(self, data, next_node=None):
+        self.data = data
+        self.next = next_node
+
+
 class LinkedList:
 
     def __init__(self, front=None):
@@ -13,6 +23,17 @@ class LinkedList:
             while current.next:
                 current = current.next
             current.next = LinkedListNode(value)
+
+    def remove(self):
+        if not self.front:
+            raise EmptyContainerError('List is empty')
+        elif not self.front.next:
+            self.front = None
+        else:
+            current = self.front
+            while current.next.next:
+                current = current.next
+            current.next = None
 
     def get(self, index):
         if index < 0:
@@ -31,20 +52,36 @@ class LinkedList:
                     index -= 1
             return current.data
 
-    def get_index(self, value):
-        if value is None:
-            raise TypeError('value cannot be None')
-        elif self.front is not None:
-            index = 0
-            if self.front.data == value:
-                return index
+    def set_index(self, index, value):
+        if index < 0:
+            raise IndexError('index out of range')
+        else:
             current = self.front
-            while current.next is not None:
-                index += 1
+            current_index = 0
+            while (current_index < index) and current.next:
                 current = current.next
-                if current.data == value:
-                    return index
-        return -1
+                current_index += 1
+            if current_index != index:
+                raise IndexError('index out of range')
+            else:
+                current.value = value
+
+    def insert(self, index, value):
+        if index < 0:
+            raise IndexError('index out of range')
+        elif index == 0:
+            self.front = LinkedListNode(value, self.front.next)
+        else:
+            current = self.front
+            current_index = 0
+            while (current_index < index - 1) and current.next:
+                current = current.next
+                current_index += 1
+            if current_index != index:
+                raise IndexError('index out of range')
+            else:
+                current = self.front
+                current_index = 0
 
     def remove_index(self, index):
         if index < 0:
@@ -66,6 +103,46 @@ class LinkedList:
             else:
                 current.next = current.next.next
 
+    def index_of(self, value):
+        if value is None:
+            raise TypeError('value cannot be None')
+        elif self.front is not None:
+            index = 0
+            if self.front.data == value:
+                return index
+            current = self.front
+            while current.next is not None:
+                index += 1
+                current = current.next
+                if current.data == value:
+                    return index
+        return -1
+
+    def size(self):
+        if not self.front:
+            return 0
+        else:
+            current = self.front
+            count = 0
+            while current.next:
+                count += 1
+                current = current.next
+            return count
+
+    def is_empty(self):
+        return self.size() == 0
+
+    def contains(self, other):
+        if not self.front:
+            return False
+        else:
+            current = self.front
+            while current:
+                if current.value == other:
+                    return True
+                current = current.next
+            return True
+
     def clear(self):
         self.front = None
 
@@ -80,9 +157,8 @@ class LinkedList:
         string += ']'
         return string
 
-
-class LinkedListNode:
-
-    def __init__(self, data=None, next_node=None):
-        self.data = data
-        self.next = next_node
+    def iterator(self):
+        current = self.front
+        while current:
+            yield current
+            current = current.next
