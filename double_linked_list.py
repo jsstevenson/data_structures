@@ -1,4 +1,5 @@
 import linked_list
+from ds_exceptions import EmptyContainerError
 
 
 class DoubleLinkedList(linked_list.LinkedList):
@@ -19,6 +20,21 @@ class DoubleLinkedList(linked_list.LinkedList):
             self.back = self.back.next
         self.size += 1
 
+    def pop(self):
+        if not self.front:
+            raise EmptyContainerError('List is empty')
+        elif self.size == 1:
+            result = self.front
+            self.front = None
+            self.back = None
+            self.size = 0
+        else:
+            result = self.back
+            self.back = self.back.prev
+            self.back.next = None
+            self.size -= 1
+        return result
+
     def go_to(self, index):
         if index < 0 or index >= self.size:
             raise IndexError(f'Index {index} out of range')
@@ -38,6 +54,28 @@ class DoubleLinkedList(linked_list.LinkedList):
                 current_index -= 1
         return current
 
+    def get(self, index):
+        return self.go_to(index).data
+
+    def get_index(self, value):
+        if self.size < 1:
+            return -1
+        else:
+            current = self.front
+            current_ind = 0
+            while current:
+                if current.data == value:
+                    return current_ind
+                current = current.next
+                current_ind += 1
+            return -1
+
+    def set_index(self, index, value):
+        if (index < 0) or (index >= self.size):
+            raise IndexError('Index out of range')
+        else:
+            self.go_to(index).data = value
+
     def insert(self, value, index):
         previous_tenant = self.go_to(index)
         new_node = DoubleLinkedListNode(value, previous_tenant.prev,
@@ -46,14 +84,28 @@ class DoubleLinkedList(linked_list.LinkedList):
         previous_tenant.prev = new_node
         self.size += 1
 
-    def get(self, index):
-        return self.go_to(index).data
-
-    def remove(self, index):
-        to_remove = self.go_to(index)
-        to_remove.prev.next = to_remove.next
-        to_remove.next.prev = to_remove.prev
+    def remove_index(self, index):
+        if index == 0:
+            if self.size == 0:
+                raise EmptyContainerError('List is already empty')
+            elif self.size == 1:
+                to_remove = self.front
+                self.front = None
+                self.back = None
+            else:
+                to_remove = self.front
+                self.front = self.front.next
+                self.front.prev = None
+        elif index + 1 == self.size:
+            to_remove = self.back
+            self.back = self.back.prev
+            self.back.next = None
+        else:
+            to_remove = self.go_to(index)
+            to_remove.prev.next = to_remove.next
+            to_remove.next.prev = to_remove.prev
         self.size -= 1
+        return to_remove
 
     def clear(self):
         self.front = None
