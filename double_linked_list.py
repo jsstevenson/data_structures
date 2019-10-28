@@ -122,6 +122,16 @@ class DoubleLinkedList(linked_list.LinkedList):
                     return True
             return False
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.front:
+            current = self.front
+            while current:
+                yield current
+                current = current.next
+
 
 class DoubleLinkedListNode(linked_list.LinkedListNode):
 

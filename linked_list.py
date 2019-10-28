@@ -64,13 +64,16 @@ class LinkedList:
             if current_index != index:
                 raise IndexError('index out of range')
             else:
-                current.value = value
+                current.data = value
 
     def insert(self, index, value):
         if index < 0:
             raise IndexError('index out of range')
         elif index == 0:
-            self.front = LinkedListNode(value, self.front.next)
+            if self.front:
+                self.front = LinkedListNode(value, self.front.next)
+            else:
+                self.front = LinkedListNode(value)
         else:
             current = self.front
             current_index = 0
@@ -80,8 +83,7 @@ class LinkedList:
             if current_index != index:
                 raise IndexError('index out of range')
             else:
-                current = self.front
-                current_index = 0
+                current.next = LinkedListNode(value, current.next)
 
     def remove_index(self, index):
         if index < 0:
@@ -138,7 +140,7 @@ class LinkedList:
         else:
             current = self.front
             while current:
-                if current.value == other:
+                if current.data == other:
                     return True
                 current = current.next
             return True
@@ -157,8 +159,8 @@ class LinkedList:
         string += ']'
         return string
 
-    def iterator(self):
+    def generator(self):
         current = self.front
         while current:
-            yield current
+            yield current.data
             current = current.next
