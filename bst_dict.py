@@ -1,4 +1,5 @@
 from binary_tree import BinaryTree, BinaryTreeNode
+from ds_exceptions import EmptyContainerError
 
 
 class BSTDict(BinaryTree):
@@ -54,7 +55,7 @@ class BSTDict(BinaryTree):
 
     def get(self, key):
         if self.overall_root is None:
-            raise KeyError('Key not contained in tree')
+            raise EmptyContainerError('Tree is empty')
         else:
             return self.get_traverse(self.overall_root, key)
 
