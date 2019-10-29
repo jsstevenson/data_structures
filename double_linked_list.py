@@ -84,8 +84,16 @@ class DoubleLinkedList(linked_list.LinkedList):
         previous_tenant.prev = new_node
         self.size += 1
 
+    '''
+    Remove element at given index.
+    in  : index, an int. Raises EmptyContainerError if list is empty,
+          or IndexError if index is out of range.
+    out : removes item at index from list and returns it
+    '''
     def remove_index(self, index):
-        if index == 0:
+        if index + 1 > self.size or index < 0:
+            raise IndexError('Invalid index')
+        elif index == 0:
             if self.size == 0:
                 raise EmptyContainerError('List is already empty')
             elif self.size == 1:
@@ -122,7 +130,10 @@ class DoubleLinkedList(linked_list.LinkedList):
                     return True
             return False
 
-    # working to make a for loop work
+    '''
+    Iterable method -- returns iterator that cycles through contained nodes,
+    front to back
+    '''
     def __iter__(self):
         if self.front:
             current = self.front
