@@ -20,21 +20,6 @@ class DoubleLinkedList(linked_list.LinkedList):
             self.back = self.back.next
         self.size += 1
 
-    def pop(self):
-        if not self.front:
-            raise EmptyContainerError('List is empty')
-        elif self.size == 1:
-            result = self.front
-            self.front = None
-            self.back = None
-            self.size = 0
-        else:
-            result = self.back
-            self.back = self.back.prev
-            self.back.next = None
-            self.size -= 1
-        return result
-
     def go_to(self, index):
         if index < 0 or index >= self.size:
             raise IndexError(f'Index {index} out of range')
