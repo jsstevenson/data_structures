@@ -122,15 +122,14 @@ class DoubleLinkedList(linked_list.LinkedList):
                     return True
             return False
 
+    # working to make a for loop work
     def __iter__(self):
-        return self
-
-    def __next__(self):
         if self.front:
             current = self.front
             while current:
-                yield current
+                return_val = current
                 current = current.next
+                yield return_val
 
 
 class DoubleLinkedListNode(linked_list.LinkedListNode):
@@ -139,3 +138,6 @@ class DoubleLinkedListNode(linked_list.LinkedListNode):
         self.data = data
         self.prev = prev_node
         self.next = next_node
+
+    def __str__(self):
+        return self.data
