@@ -91,9 +91,7 @@ class DoubleLinkedList(linked_list.LinkedList):
     out : removes item at index from list and returns it
     '''
     def remove_index(self, index):
-        if index + 1 > self.size or index < 0:
-            raise IndexError('Invalid index')
-        elif index == 0:
+        if index == 0:
             if self.size == 0:
                 raise EmptyContainerError('List is already empty')
             elif self.size == 1:
