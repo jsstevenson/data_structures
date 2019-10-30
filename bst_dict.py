@@ -7,6 +7,11 @@ class BSTDict(BinaryTree):
     def __init__(self, overall_root=None):
         super().__init__(overall_root)
 
+    '''
+    Helper method for put(). Checks key against root, and either replaces
+    root's current value with provided value, puts it at a new child to the
+    left or right, or continues the traversal from the left or right child.
+    '''
     def put_traverse(self, root, key, value):
         if root.data == key:
             root.data.value = value
@@ -19,6 +24,10 @@ class BSTDict(BinaryTree):
         else:
             self.put_traverse(root.right, key, value)
 
+    '''
+    Put key-value pair into tree.
+    Raises TypeError if key is None.
+    '''
     def put(self, key, value):
         if key is None:
             raise TypeError('Cannot accept key of type None')
@@ -27,6 +36,10 @@ class BSTDict(BinaryTree):
         else:
             self.put_traverse(self.overall_root, key, value)
 
+    '''
+    Helper method for contains_key(). Continues search for key against current
+    node ('root') and continues search downward if not found.
+    '''
     def contains_key_traverse(self, root, key):
         if root is None:
             return False
@@ -37,6 +50,9 @@ class BSTDict(BinaryTree):
             right = self.contains_key_traverse(root.right, key)
             return left or right
 
+    '''
+    Check whether dict contains key
+    '''
     def contains_key(self, key):
         if self.overall_root is None:
             return False
@@ -53,6 +69,10 @@ class BSTDict(BinaryTree):
         else:
             return self.get_traverse(root.right, key)
 
+    '''
+    Get value for provided key. Raises KeyError if key isn't in tree,
+    and EmptyContainerError if tree is empty.
+    '''
     def get(self, key):
         if self.overall_root is None:
             raise EmptyContainerError('Tree is empty')
