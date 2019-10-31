@@ -34,7 +34,11 @@ class BSTDict(BinaryTree):
         if self.overall_root is None:
             self.overall_root = BSTDictNode(key, value)
         else:
-            self.put_traverse(self.overall_root, key, value)
+            try:
+                key > self.overall_root.data.key
+            except TypeError:
+                raise TypeError('cannot accept key of this type')
+            self.add_traverse(self.overall_root, key, value)
 
     '''
     Helper method for contains_key(). Continues search for key against current
@@ -79,6 +83,82 @@ class BSTDict(BinaryTree):
         else:
             return self.get_traverse(self.overall_root, key)
 
+    '''
+    Helper method for readd(). Once we're in the tree, traverse it recursively
+    to find the correct location for the disconnected branch.
+    '''
+    def readd_traverse(self, root, branch):
+        if root.left is None and branch.data < root.data:
+            root.left = branch
+        elif root.right is None and branch.data > root.data:
+            root.right = branch
+        elif branch.data < root.data:
+            self.readd_traverse(root.left, branch)
+        else:
+            self.readd_traverse(root.right, branch)
+
+    '''
+    Helper method for remove(). For any branches disconnected by removal,
+    perform in-order traversal to find their correct position and re-add them.
+    Branch could be None - we want to call it on child branches without
+    any prior check on their existence.
+
+    TODO: Less naive implementation. Currently it manually readds every node
+    individually. This is undobutedly suboptimal.
+    '''
+    def readd(self, branch):
+        if branch is not None:
+            # add kid nodes + None out child branches
+            if branch.left is not None:
+                temp = branch.left
+                branch.left = None
+                self.readd(temp)
+            if branch.right is not None:
+                temp = branch.right
+                branch.right = None
+                self.readd(temp)
+            # add this node back
+            if self.overall_root is None:
+                self.overall_root = branch
+            else:
+                self.readd_traverse(self.overall_root, branch)
+
+    def remove_traverse(self, root, key):
+        if root is None:
+            raise KeyError('Not contained in tree')
+        elif root.left.data == key:
+            temp = root.left
+            root.left = None
+            self.readd(temp.left)
+            self.readd(temp.right)
+            return temp.data
+        elif root.right.data == key:
+            temp = root.right
+            root.right = None
+            self.readd(temp.left)
+            self.readd(temp.right)
+            return temp.data
+        elif root.data > key:
+            return self.remove_traverse(self, root.left, key)
+        else:
+            return self.remove_traverse(self, root.right, key)
+
+    '''
+    Remove key/value pair with specified key from tree. Raises KeyError if key
+    isn't contained in the tree. Returns the removed KVPair object.
+    '''
+    def remove(self, key):
+        if self.overall_root is None:
+            raise KeyError('Not contained in tree')
+        elif self.overall_root.data == key:
+            temp = self.overall_root
+            self.overall_root = None
+            self.readd(temp.left)
+            self.readd(temp.right)
+            return temp.data
+        else:
+            return self.remove_traverse(self.overall_root, key)
+
     def print_inorder_traverse(self, root):
         if root is None:
             return ''
@@ -98,14 +178,32 @@ class BSTDict(BinaryTree):
             result = result[:-2] + '}'
             return result
 
-    def __repr__(self):
+    def __str__(self):
         return self.print_inorder()
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class BSTDictNode(BinaryTreeNode):
 
+    '''
+    Calls BinaryTreeNode constructor, supplying its data field with a new
+    KVPair object. Leaves left and right children fields empty if not given
+    any arguments.
+    '''
     def __init__(self, key, value, left=None, right=None):
         super().__init__(KVPair(key, value), left, right)
+
+    '''
+    Return string formatting a la standard dict representation
+    e.g., {key: value}
+    '''
+    def __str__(self):
+        return f'{{{self.data}}}'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class KVPair(object):
