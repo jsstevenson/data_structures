@@ -61,5 +61,34 @@ class TestGet(unittest.TestCase):
             x.get(3)
 
 
+class TestRemove(unittest.TestCase):
+    def test_remove_general(self):
+        x = BSTDict()
+        x.put(1, 'a')
+        x.put(0, 'b')
+        x.put(2, 'c')
+        x.put(-1, 'd')
+        self.assertEqual(x.remove(0), 'b')
+        self.assertEqual(x.get(-1), 'd')
+        x.put(0, 'b')
+        self.assertEqual(x.remove(1), 'a')
+        self.assertEqual(x.get(0), 'b')
+        x.put(5, 'z')
+        self.assertEqual(x.remove(2), 'c')
+        self.assertEqual(x.remove(5), 'z')
+        self.assertEqual(x.remove(-1), 'd')
+        self.assertEqual(x.remove(0), 'b')
+
+    def test_raises_key_error(self):
+        x = BSTDict()
+        with self.assertRaises(KeyError):
+            x.remove('a')
+        x.put(1, 'a')
+        x.put(2, 'b')
+        x.remove(2)
+        with self.assertRaises(KeyError):
+            x.remove(2)
+
+
 if __name__ == '__main__':
     unittest.main()
