@@ -38,7 +38,7 @@ class BSTDict(BinaryTree):
                 key > self.overall_root.data.key
             except TypeError:
                 raise TypeError('cannot accept key of this type')
-            self.add_traverse(self.overall_root, key, value)
+            self.put_traverse(self.overall_root, key, value)
 
     '''
     Helper method for contains_key(). Continues search for key against current
@@ -87,15 +87,15 @@ class BSTDict(BinaryTree):
     Helper method for readd(). Once we're in the tree, traverse it recursively
     to find the correct location for the disconnected branch.
     '''
-    def readd_traverse(self, root, branch):
+    def reput_traverse(self, root, branch):
         if root.left is None and branch.data < root.data:
             root.left = branch
         elif root.right is None and branch.data > root.data:
             root.right = branch
         elif branch.data < root.data:
-            self.readd_traverse(root.left, branch)
+            self.reput_traverse(root.left, branch)
         else:
-            self.readd_traverse(root.right, branch)
+            self.reput_traverse(root.right, branch)
 
     '''
     Helper method for remove(). For any branches disconnected by removal,
@@ -121,7 +121,7 @@ class BSTDict(BinaryTree):
             if self.overall_root is None:
                 self.overall_root = branch
             else:
-                self.readd_traverse(self.overall_root, branch)
+                self.reput_traverse(self.overall_root, branch)
 
     def remove_traverse(self, root, key):
         if root is None:
