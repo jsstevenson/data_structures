@@ -87,15 +87,15 @@ class BSTDict(BinaryTree):
     Helper method for readd(). Once we're in the tree, traverse it recursively
     to find the correct location for the disconnected branch.
     '''
-    def reput_traverse(self, root, branch):
+    def readd_traverse(self, root, branch):
         if root.left is None and branch.data < root.data:
             root.left = branch
         elif root.right is None and branch.data > root.data:
             root.right = branch
         elif branch.data < root.data:
-            self.reput_traverse(root.left, branch)
+            self.readd_traverse(root.left, branch)
         else:
-            self.reput_traverse(root.right, branch)
+            self.readd_traverse(root.right, branch)
 
     '''
     Helper method for remove(). For any branches disconnected by removal,
@@ -121,27 +121,27 @@ class BSTDict(BinaryTree):
             if self.overall_root is None:
                 self.overall_root = branch
             else:
-                self.reput_traverse(self.overall_root, branch)
+                self.readd_traverse(self.overall_root, branch)
 
     def remove_traverse(self, root, key):
         if root is None:
             raise KeyError('Not contained in tree')
-        elif root.left.data == key:
+        elif root.left and root.left.data == key:
             temp = root.left
             root.left = None
             self.readd(temp.left)
             self.readd(temp.right)
             return temp.data
-        elif root.right.data == key:
+        elif root.right and root.right.data == key:
             temp = root.right
             root.right = None
             self.readd(temp.left)
             self.readd(temp.right)
             return temp.data
         elif root.data > key:
-            return self.remove_traverse(self, root.left, key)
+            return self.remove_traverse(root.left, key)
         else:
-            return self.remove_traverse(self, root.right, key)
+            return self.remove_traverse(root.right, key)
 
     '''
     Remove key/value pair with specified key from tree. Raises KeyError if key
