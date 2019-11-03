@@ -7,12 +7,12 @@ class BSTDict(BinaryTree):
     def __init__(self, overall_root=None):
         super().__init__(overall_root)
 
-    '''
-    Helper method for put(). Checks key against root, and either replaces
-    root's current value with provided value, puts it at a new child to the
-    left or right, or continues the traversal from the left or right child.
-    '''
     def put_traverse(self, root, key, value):
+        '''
+        Helper method for put(). Checks key against root, and either replaces
+        root's current value with provided value, puts it at a new child to the
+        left or right, or continues the traversal from the left or right child.
+        '''
         if root.data == key:
             root.data.value = value
         elif root.left is None and key < root.data:
@@ -24,11 +24,11 @@ class BSTDict(BinaryTree):
         else:
             self.put_traverse(root.right, key, value)
 
-    '''
-    Put key-value pair into tree.
-    Raises TypeError if key is None.
-    '''
     def put(self, key, value):
+        '''
+        Put key-value pair into tree.
+        Raises TypeError if key is None.
+        '''
         if key is None:
             raise TypeError('Cannot accept key of type None')
         if self.overall_root is None:
@@ -40,11 +40,11 @@ class BSTDict(BinaryTree):
                 raise TypeError('cannot accept key of this type')
             self.put_traverse(self.overall_root, key, value)
 
-    '''
-    Helper method for contains_key(). Continues search for key against current
-    node ('root') and continues search downward if not found.
-    '''
     def contains_key_traverse(self, root, key):
+        '''
+        Helper method for contains_key(). Continues search for key against
+        current node ('root') and continues search downward if not found.
+        '''
         if root is None:
             return False
         elif root.data.key == key:
@@ -54,10 +54,10 @@ class BSTDict(BinaryTree):
             right = self.contains_key_traverse(root.right, key)
             return left or right
 
-    '''
-    Check whether dict contains key
-    '''
     def contains_key(self, key):
+        '''
+        Check whether dict contains key
+        '''
         if self.overall_root is None:
             return False
         else:
@@ -73,21 +73,21 @@ class BSTDict(BinaryTree):
         else:
             return self.get_traverse(root.right, key)
 
-    '''
-    Get value for provided key. Raises KeyError if key isn't in tree,
-    and EmptyContainerError if tree is empty.
-    '''
     def get(self, key):
+        '''
+        Get value for provided key. Raises KeyError if key isn't in tree,
+        and EmptyContainerError if tree is empty.
+        '''
         if self.overall_root is None:
             raise EmptyContainerError('Tree is empty')
         else:
             return self.get_traverse(self.overall_root, key)
 
-    '''
-    Helper method for readd(). Once we're in the tree, traverse it recursively
-    to find the correct location for the disconnected branch.
-    '''
     def readd_traverse(self, root, branch):
+        '''
+        Helper method for readd(). Once we're in the tree, traverse it
+        recursively to find the correct location for the disconnected branch.
+        '''
         if root.left is None and branch.data < root.data:
             root.left = branch
         elif root.right is None and branch.data > root.data:
@@ -97,16 +97,16 @@ class BSTDict(BinaryTree):
         else:
             self.readd_traverse(root.right, branch)
 
-    '''
-    Helper method for remove(). For any branches disconnected by removal,
-    perform in-order traversal to find their correct position and re-add them.
-    Branch could be None - we want to call it on child branches without
-    any prior check on their existence.
-
-    TODO: Less naive implementation. Currently it manually readds every node
-    individually. This is undobutedly suboptimal.
-    '''
     def readd(self, branch):
+        '''
+        Helper method for remove(). For any branches disconnected by removal,
+        perform in-order traversal to find their correct position and re-add
+        them. Branch could be None - we want to call it on child branches
+        without any prior check on their existence.
+
+        TODO: Less naive implementation. Currently it manually readds every
+        node individually. This is undobutedly suboptimal.
+        '''
         if branch is not None:
             # add kid nodes + None out child branches
             if branch.left is not None:
@@ -143,11 +143,11 @@ class BSTDict(BinaryTree):
         else:
             return self.remove_traverse(root.right, key)
 
-    '''
-    Remove key/value pair with specified key from tree. Raises KeyError if key
-    isn't contained in the tree. Returns the removed KVPair object.
-    '''
     def remove(self, key):
+        '''
+        Remove key/value pair with specified key from tree. Raises KeyError if
+        key isn't contained in the tree. Returns the removed KVPair object.
+        '''
         if self.overall_root is None:
             raise KeyError('Not contained in tree')
         elif self.overall_root.data == key:
@@ -187,19 +187,19 @@ class BSTDict(BinaryTree):
 
 class BSTDictNode(BinaryTreeNode):
 
-    '''
-    Calls BinaryTreeNode constructor, supplying its data field with a new
-    KVPair object. Leaves left and right children fields empty if not given
-    any arguments.
-    '''
     def __init__(self, key, value, left=None, right=None):
+        '''
+        Calls BinaryTreeNode constructor, supplying its data field with a new
+        KVPair object. Leaves left and right children fields empty if not given
+        any arguments.
+        '''
         super().__init__(KVPair(key, value), left, right)
 
-    '''
-    Return string formatting a la standard dict representation
-    e.g., {key: value}
-    '''
     def __str__(self):
+        '''
+        Return string formatting a la standard dict representation
+        e.g., {key: value}
+        '''
         return f'{{{self.data}}}'
 
     def __repr__(self):
